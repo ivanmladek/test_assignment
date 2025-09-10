@@ -12,7 +12,7 @@ This project implements a machine learning model for house price prediction as a
 
 1. Install dependencies using Conda:
    ```bash
-   conda env create -f src/conda_environment.yml
+   conda env create -f conda_environment.yml
    conda activate housing
    ```
 
@@ -29,7 +29,7 @@ This project implements a machine learning model for house price prediction as a
 
 4. Run the API service with Docker:
    ```bash
-   docker build -t house-price-prediction -f src/Dockerfile .
+   docker build -t house-price-prediction .
    docker run -p 8000:8000 house-price-prediction
    ```
 
