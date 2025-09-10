@@ -2,11 +2,11 @@ import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error
-import pickle, json, pathlib
+import pickle, json, pathlib, os
 
-SALES_PATH = "data/kc_house_data.csv"
-DEMOGRAPHICS_PATH = "data/zipcode_demographics.csv"
-OUTPUT_DIR = "model"
+SALES_PATH = os.path.join(os.path.dirname(__file__), "data", "kc_house_data.csv")
+DEMOGRAPHICS_PATH = os.path.join(os.path.dirname(__file__), "data", "zipcode_demographics.csv")
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "model")
 
 def load_data():
     sales_data = pd.read_csv(SALES_PATH, dtype={'zipcode': str})

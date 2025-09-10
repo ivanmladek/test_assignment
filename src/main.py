@@ -19,25 +19,25 @@ app.add_middleware(
 
 # Load models and demographics data at startup
 try:
-    with open("model/model.pkl", "rb") as f:
+    with open("../model/model.pkl", "rb") as f:
         model = pickle.load(f)
 except FileNotFoundError:
     model = None
 
 try:
-    with open("model/model_features.json", "r") as f:
+    with open("../model/model_features.json", "r") as f:
         model_features = json.load(f)
 except FileNotFoundError:
     model_features = None
 
 try:
-    with open("model/model_improved.pkl", "rb") as f:
+    with open("../model/model_improved.pkl", "rb") as f:
         improved_model = pickle.load(f)
 except FileNotFoundError:
     improved_model = None
 
 try:
-    with open("model/model_features_improved.json", "r") as f:
+    with open("../model/model_features_improved.json", "r") as f:
         improved_model_features = json.load(f)
 except FileNotFoundError:
     improved_model_features = None
@@ -100,20 +100,27 @@ def predict(features: HouseFeatures):
     print(f"98118 in demographics: {'98118' in demographics['zipcode'].values}")
     print(f"98042 in demographics: {'98042' in demographics['zipcode'].values}")
     # Convert input to DataFrame
-    input_df = pd.DataFrame([features.dict()])
+    input_dict = features.dict()
+    # Set defaults for sale_year and sale_month if not provided
+    if input_dict['sale_year'] is None:
+        input_dict['sale_year'] = 2023  # Default year
+    if input_dict['sale_month'] is None:
+        input_dict['sale_month'] = 6  # Default month
+    input_df = pd.DataFrame([input_dict])
     print(f"Input df: {input_df}")
     print(f"Input df zipcode dtype: {input_df['zipcode'].dtype}")
     print(f"Demographics zipcode dtype: {demographics['zipcode'].dtype}")
-    
+
     # Merge with demographics data
     merged_df = pd.merge(input_df, demographics, on='zipcode', how='left')
     print(f"Merged df shape: {merged_df.shape}")
     print(f"Merged df nulls: {merged_df.isnull().sum()}")
     print(f"Merged df: {merged_df}")
-    
-    # Check if zipcode was found
-    if merged_df.isnull().values.any():
-        print(f"Debug: merged_df has null values")
+
+    # Check if zipcode was found (only check demographics columns for nulls)
+    demographics_cols = [col for col in merged_df.columns if col != 'sale_year' and col != 'sale_month']
+    if merged_df[demographics_cols].isnull().values.any():
+        print(f"Debug: merged_df has null values in demographics columns")
         print(f"Debug: input_df columns: {input_df.columns.tolist()}")
         print(f"Debug: demographics columns: {demographics.columns.tolist()}")
         raise HTTPException(status_code=404, detail=f"Demographics not found for zipcode {features.zipcode}")

@@ -1,14 +1,14 @@
-import json, pathlib, pickle
+import json, pathlib, pickle, os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import RobustScaler
 
-SALES_PATH = "data/kc_house_data.csv"
-DEMOGRAPHICS_PATH = "data/zipcode_demographics.csv"
+SALES_PATH = os.path.join(os.path.dirname(__file__), "data", "kc_house_data.csv")
+DEMOGRAPHICS_PATH = os.path.join(os.path.dirname(__file__), "data", "zipcode_demographics.csv")
 SALES_COLUMN_SELECTION = ['price', 'bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot', 'floors', 'sqft_above', 'sqft_basement', 'zipcode']
-OUTPUT_DIR = "model"
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "model")
 
 def load_data():
     data = pd.read_csv(SALES_PATH, usecols=SALES_COLUMN_SELECTION, dtype={'zipcode': str})

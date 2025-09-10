@@ -1,18 +1,22 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error
-import pickle, json
+import pickle, json, os
 
 def load_model():
-    with open("model/model.pkl", "rb") as f:
+    model_path = os.path.join(os.path.dirname(__file__), "..", "model", "model.pkl")
+    features_path = os.path.join(os.path.dirname(__file__), "..", "model", "model_features.json")
+    with open(model_path, "rb") as f:
         model = pickle.load(f)
-    with open("model/model_features.json", "r") as f:
+    with open(features_path, "r") as f:
         model_features = json.load(f)
     return model, model_features
 
 def load_data():
-    sales_data = pd.read_csv("data/kc_house_data.csv", dtype={'zipcode': str})
-    demographics = pd.read_csv("data/zipcode_demographics.csv", dtype={'zipcode': str})
+    sales_path = os.path.join(os.path.dirname(__file__), "data", "kc_house_data.csv")
+    demographics_path = os.path.join(os.path.dirname(__file__), "data", "zipcode_demographics.csv")
+    sales_data = pd.read_csv(sales_path, dtype={'zipcode': str})
+    demographics = pd.read_csv(demographics_path, dtype={'zipcode': str})
     return sales_data, demographics
 
 def prepare_data(sales_data, demographics, model_features):

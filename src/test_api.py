@@ -2,6 +2,7 @@ import unittest
 import requests
 import pandas as pd
 import json
+import os
 
 class TestHousePriceAPI(unittest.TestCase):
     """Test suite for house price prediction API"""
@@ -17,7 +18,8 @@ class TestHousePriceAPI(unittest.TestCase):
     def setUpClass(cls):
         """Set up test fixtures once for all tests"""
         # Load test data
-        cls.test_data = pd.read_csv("data/future_unseen_examples.csv")
+        data_path = os.path.join(os.path.dirname(__file__), "data", "future_unseen_examples.csv")
+        cls.test_data = pd.read_csv(data_path)
 
     def test_api_endpoints_exist(self):
         """Test that all API endpoints are accessible"""
@@ -110,11 +112,15 @@ class TestHousePriceAPI(unittest.TestCase):
             "view": 0,
             "condition": 3,
             "grade": 8,
+            "sqft_above": 2220,
+            "sqft_basement": 0,
             "yr_built": 1945,
             "yr_renovated": 0,
             "zipcode": "99999",  # Invalid zipcode
             "lat": 47.6764,
-            "long": -122.293
+            "long": -122.293,
+            "sqft_living15": 2220,
+            "sqft_lot15": 7350
         }
 
         response = requests.post(self.ENDPOINTS["predict"], json=payload)
